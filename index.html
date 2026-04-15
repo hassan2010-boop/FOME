@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>روقان مجنون 👑</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      text-align: center;
+      background: #111;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px cyan;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: cyan;
+      cursor: pointer;
+    }
+
+    #joke {
+      margin-bottom: 20px;
+      min-height: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>دوس لو انت قدها 😏</h2>
+  <div id="joke">استنى المفاجأة...</div>
+  <button onclick="goCrazy()">🔥 دوس</button>
+</div>
+
+<script>
+let clickCount = 0;
+
+const sounds = [
+  "sound1.mp3",
+  "sound2.mp3",
+  "sound3.mp3"
+];
+
+const jokes = [
+  "الدنيا فجأة قلبت فيلم رعب 😂",
+  "إنت دخلت في مود الجنون خلاص 😈",
+  "مفيش رجوع دلوقتي 😏",
+  "اللي جاي مش طبيعي 🔥"
+];
+
+function goCrazy() {
+  clickCount++;
+
+  const jokeBox = document.getElementById("joke");
+  jokeBox.innerText = jokes[Math.floor(Math.random() * jokes.length)];
+
+  // يشتغل من تاني مرة
+  if (clickCount >= 2) {
+
+    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+    const audio = new Audio(randomSound);
+
+    audio.volume = 0; // يبدأ من صفر
+    audio.play();
+
+    // fade in (يرفع الصوت تدريجي)
+    let vol = 0;
+    const fade = setInterval(() => {
+      if (vol < 1) {
+        vol += 0.1;
+        audio.volume = vol;
+      } else {
+        clearInterval(fade);
+      }
+    }, 100);
+  }
+}
+</script>
+
+</body>
+</html> 
