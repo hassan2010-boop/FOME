@@ -4,95 +4,132 @@
   <meta charset="UTF-8">
   <title>روقان مجنون 👑</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
       margin: 0;
-      background: black;
+      background: #050010;
       color: white;
-      font-family: sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     .card {
       text-align: center;
-      background: #111;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px cyan;
+      background: rgba(20, 20, 30, 0.9);
+      padding: 50px 40px;
+      border-radius: 30px;
+      border: 2px solid cyan;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      width: 90%;
+      max-width: 400px;
+      transition: 0.3s;
+    }
+
+    h2 {
+      color: cyan;
+      margin-top: 0;
+      font-size: 24px;
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 18px;
+      padding: 18px 40px;
+      font-size: 20px;
+      font-weight: bold;
       border: none;
-      border-radius: 10px;
-      background: cyan;
+      border-radius: 15px;
+      background: linear-gradient(45deg, cyan, #008b8b);
+      color: black;
       cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+    }
+
+    button:hover {
+      transform: scale(1.1) rotate(-2deg);
+      box-shadow: 0 0 40px cyan;
+    }
+
+    button:active {
+      transform: scale(0.9);
     }
 
     #joke {
-      margin-bottom: 20px;
+      margin-top: 20px;
+      font-size: 1.2rem;
       min-height: 80px;
+      color: #e0e0e0;
+      line-height: 1.6;
     }
   </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="card" id="mainCard">
   <h2>دوس لو انت قدها 😏</h2>
   <div id="joke">استنى المفاجأة...</div>
-  <button onclick="goCrazy()">🔥 دوس</button>
+  <button onclick="goCrazy()">🔥 دوس فجّر</button>
 </div>
 
 <script>
-let clickCount = 0;
+let currentAudio = null; // مخزن الصوت الحالي
 
+// تأكد من أسماء ملفات الصوت لديك في نفس المجلد
 const sounds = [
   "sound1.mp3",
   "sound2.mp3",
-  "sound3.mp3"
+  "sound3.mp3",
+  "sound4.mp3"
 ];
 
 const jokes = [
   "الدنيا فجأة قلبت فيلم رعب 😂",
   "إنت دخلت في مود الجنون خلاص 😈",
   "مفيش رجوع دلوقتي 😏",
-  "اللي جاي مش طبيعي 🔥"
+  "اللي جاي مش طبيعي 🔥",
+  "الهروب مستحيل يا صديقي 💀"
 ];
 
 function goCrazy() {
-  clickCount++;
-
+  // 1. تغيير النص بشكل عشوائي
   const jokeBox = document.getElementById("joke");
   jokeBox.innerText = jokes[Math.floor(Math.random() * jokes.length)];
 
-  // يشتغل من تاني مرة
-  if (clickCount >= 2) {
-
-    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
-    const audio = new Audio(randomSound);
-
-    audio.volume = 0; // يبدأ من صفر
-    audio.play();
-
-    // fade in (يرفع الصوت تدريجي)
-    let vol = 0;
-    const fade = setInterval(() => {
-      if (vol < 1) {
-        vol += 0.1;
-        audio.volume = vol;
-      } else {
-        clearInterval(fade);
-      }
-    }, 100);
+  // 2. إيقاف الصوت القديم فوراً
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0; // إعادة للصفر
   }
+
+  // 3. اختيار وتشغيل صوت جديد
+  const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+  currentAudio = new Audio(randomSound);
+
+  // 4. تأثير دخول الصوت (Fade In)
+  currentAudio.volume = 0;
+  currentAudio.play().catch(e => console.log("تحتاج لتفاعل مع الصفحة أولاً"));
+
+  let vol = 0;
+  const fade = setInterval(() => {
+    if (vol < 1) {
+      vol += 0.1;
+      if (currentAudio) currentAudio.volume = Math.min(vol, 1);
+    } else {
+      clearInterval(fade);
+    }
+  }, 100);
+
+  // تأثير بصري خفيف (هزة للكارت)
+  const card = document.getElementById("mainCard");
+  card.style.transform = "translateX(5px)";
+  setTimeout(() => card.style.transform = "translateX(-5px)", 50);
+  setTimeout(() => card.style.transform = "translateX(0)", 100);
 }
 </script>
 
 </body>
-</html> 
+</html>
